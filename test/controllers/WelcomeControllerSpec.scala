@@ -12,5 +12,18 @@ class WelcomeControllerSpec extends PlaySpec with GuiceOneAppPerTest {
       val result = controller.welcome.apply(FakeRequest())
       status(result) mustBe OK
     }
+
+    "respond to the /welcome url" in {
+      // Need to specify Host header to get through AllowedHostsFilter
+      val request = FakeRequest(GET, "/welcome").withHeaders("Host" -> "localhost")
+      val home = route(app, request).get
+      status(home) mustBe OK
+    }
+
+    "return some html" in {
+      val controller = new WelcomeController
+      val result = controller.welcome.apply(FakeRequest())
+      contentType(result) mustBe Some("text/html")
+    }
   }
 }
